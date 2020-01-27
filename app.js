@@ -7,6 +7,7 @@ const app = express();
 const numCPUs = require('os').cpus().length;
 
 const isMasterWorker = cluster.isMaster && !module.parent;
+const basePath = process.env.BASE_PATH || '';
 
 app.use(compression());
 
@@ -34,6 +35,8 @@ if (isMasterWorker) {
     }
 }
 
-require(__dirname + '/bootstrap')(app);
+require(__dirname + '/bootstrap')(app, {
+    basePath,
+});
 
 module.exports = app;

@@ -2,12 +2,25 @@
 
 const request = require('supertest');
 const nock = require('nock');
+
+process.env.BASE_URL = 'proxy/'
+
 const app = require('../../app');
-                 
+
 describe('GET /http://jacobclark.xyz', function(){
     it('should respond with expected headers', function(done){
         request(app)
             .get('/https://www.jacobclark.xyz')
+            .expect('Access-Control-Allow-Origin', '*')
+            .expect('Access-Control-Allow-Headers', 'Content-Type')
+            .expect('Access-Control-Allow-Credentials', 'false')
+            .expect('X-Proxied-By', 'cors-container')
+            .expect(200, done);
+    });
+
+    it('should respond with expected headers', function(done){
+        request(app)
+            .get('/proxy/https://www.jacobclark.xyz')
             .expect('Access-Control-Allow-Origin', '*')
             .expect('Access-Control-Allow-Headers', 'Content-Type')
             .expect('Access-Control-Allow-Credentials', 'false')

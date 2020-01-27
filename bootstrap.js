@@ -6,11 +6,12 @@ const fs = require('fs');
 const index = fs.readFileSync('index.html', 'utf8');
 const ResponseBuilder = require('./app/ResponseBuilder');
 
-module.exports = app => {
+module.exports = (app, { basePath }) => {
     app.get('/*', (req, res) => {
         const responseBuilder = new ResponseBuilder(res);
         
-        const requestedUrl = req.url.slice(1);
+        const requestedUrl = req.url.slice(1)
+            .replace(basePath, '');
         const corsBaseUrl = '//' + req.get('host');
         
         console.info(req.protocol + '://' + req.get('host') + req.url);
